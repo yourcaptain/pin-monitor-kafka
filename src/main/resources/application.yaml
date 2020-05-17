@@ -1,0 +1,29 @@
+spring:
+  cloud:
+    stream:
+      poller:
+        fixedDelay: 30000
+      bindings:
+        pin-out-0:
+          group: pin-monitor-group
+          destination: test-topic
+          binder: kafka1
+        check-in-0:
+          destination: test-topic
+          binder: kafka1
+      function:
+        definition: pin;check
+      binders:
+        kafka1:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
+                      zkNodes: localhost:2181
+      kafka.streams.binder.configuration.default:
+        key.serde: org.apache.kafka.common.serialization.Serdes$LongSerde
+        value.serde: org.apache.kafka.common.serialization.Serdes$LongSerde
